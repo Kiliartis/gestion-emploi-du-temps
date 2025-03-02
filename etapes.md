@@ -37,3 +37,13 @@ PowerShell en admin
 > Get-Content ~\.ssh\id_ed25519.pub | Set-Clipboard
 
 > git remote set-url origin git@github.com:Kiliartis/gestion-emploi-du-temps.git
+
+
+# pre requis backend
+
+1. configurer une base mongo (https://www.mongodb.com/products/platform/atlas-database)
+    
+2. clusters free pour commencer
+
+# tools 
+1. pour les mots de passe en test : https://bcrypt-generator.com/
