@@ -17,7 +17,8 @@ export const login = createAsyncThunk(
       const response = await api.post('/auth/login', credentials);
       return response.data; // Retourne les données de l'utilisateur et le token
     } catch (err) {
-      return rejectWithValue(err.response.data); // Gère les erreurs de l'API
+      const message = err.response?.data?.message || err.message || 'Erreur réseau';
+      return rejectWithValue({ message }); // Gère les erreurs réseau et API
     }
   }
 );

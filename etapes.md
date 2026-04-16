@@ -1,49 +1,74 @@
- <!--Valable sur W11 -->
+﻿<!-- Valable sur W11 -->
 
-# pre-requis
-1. installer node (https://nodejs.org/fr)
-* autoriser l'execution de script (https://go.microsoft.com/fwlink/?LinkID=135170)
+# Étapes du projet — Gestion Emploi du Temps
 
-    executer en administrateur : 
-    > Get-ExecutionPolicy 
-    => Restricted
-    
-    Puis autoriser l'éxecution de script : 
-    > Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
-* initialiser le projet 
-    > npx create-react-app gestion-emploi-du-temps
-* verifier les dependances et les installer 
-    > npm install react-router-dom axios redux react-redux @reduxjs/toolkit
-    
-    > => 12 vulnerabilities (6 moderate, 6 high)
+## FAIT
 
-2. intialiser le depot git
-> git config --global user.email "you@example.com"
-  
-> git config --global user.name "Your Name"
+### Infrastructure & Environnement
+- [x] Installer Node.js (https://nodejs.org/fr)
+- [x] Autoriser l'exécution de scripts PowerShell
+  ```powershell
+  # En administrateur
+  Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+  ```
+- [x] Initialiser le projet avec Create React App
+- [x] Installer les dépendances : `react-router-dom axios redux react-redux @reduxjs/toolkit`
+- [x] Initialiser le dépôt Git + clé SSH GitHub
 
-* generer la clé
-> ssh-keygen -t ed25519 -C "you@example.com" 
+### Sécurité & Qualité
+- [x] Corriger la faille axios "DoS via __proto__ in mergeConfig" → mis à jour en 1.15
+- [x] Centraliser les appels HTTP dans `src/api.js`
+- [x] Utiliser `process.env.REACT_APP_API_URL` (plus d'URL en dur)
+- [x] Ajouter un intercepteur JWT dans `api.js` (Authorization header automatique)
+- [x] Gérer les erreurs réseau dans le thunk `login` (err.response peut être undefined)
 
-* ajouter la clé dans github.com
+### Frontend — Architecture
+- [x] Routing avec React Router 7 (`App.js`)
+- [x] Redux store (`src/app/store.js`)
+- [x] Slice d'authentification (`src/features/auth/authSlice.js`) : login/logout
+- [x] `PrivateRoute.js` compatible React Router 7 (utilise `<Outlet />`)
+- [x] `Login.js` refactorisé : utilise le thunk Redux via `api.js`, normalisation email
 
-PowerShell en admin 
-> Set-Service ssh-agent -StartupType Manual
+### Documentation & Outillage
+- [x] `README.md` mis à jour (stack, installation, structure, points d'attention)
+- [x] `.gitignore` renforcé (.env, logs, éditeur, OS)
+- [x] `.github/copilot-instructions.md` complété (règles API, JWT, agents IA)
 
-> Start-Service ssh-agent
+---
 
-> ssh-add C:\user....... /.ssh.id_ed25519
+## À FAIRE
 
-> Get-Content ~\.ssh\id_ed25519.pub | Set-Clipboard
+### Backend (rien n'existe — à créer from scratch)
+- [ ] Initialiser un projet Node.js + Express dans `/backend`
+- [ ] Connexion à MongoDB Atlas (Mongoose)
+- [ ] Modèle User (email, password hashé avec bcrypt, rôle)
+- [ ] Route `POST /auth/register`
+- [ ] Route `POST /auth/login` (retourne un JWT)
+- [ ] Middleware de vérification JWT (routes protégées)
+- [ ] Modèle Créneau / Planning (à définir selon le besoin métier)
+- [ ] Routes CRUD pour les créneaux
 
-> git remote set-url origin git@github.com:Kiliartis/gestion-emploi-du-temps.git
+### Frontend — Fonctionnalités métier
+- [ ] Créer `.env.local` localement avec `REACT_APP_API_URL=http://localhost:5000/api`
+- [ ] Page d'inscription (`Register.js`)
+- [ ] `Dashboard.js` — affichage réel des données (planning, créneaux)
+- [ ] Composant de calendrier / emploi du temps
+- [ ] Gestion des rôles (admin vs employé) dans l'UI
+- [ ] Réhydrater Redux au démarrage (vérifier le token en localStorage)
+- [ ] Page profil utilisateur
 
+### Tests
+- [ ] Tests unitaires : `authSlice` (login fulfilled/rejected/pending)
+- [ ] Tests unitaires : `PrivateRoute` (redirige si non authentifié)
+- [ ] Tests d'intégration : formulaire `Login`
 
-# pre requis backend
+### Infrastructure (moyen terme)
+- [ ] Migrer de CRA vers Vite (react-scripts non maintenu, 50 vulnérabilités)
+- [ ] Configurer un déploiement (Vercel/Netlify pour le frontend, Render/Railway pour le backend)
+- [ ] Passer le JWT en `httpOnly cookie` côté backend (actuellement localStorage — risque XSS)
 
-1. configurer une base mongo (https://www.mongodb.com/products/platform/atlas-database)
-    
-2. clusters free pour commencer
+---
 
-# tools 
-1. pour les mots de passe en test : https://bcrypt-generator.com/
+## Outils utiles
+- Générateur bcrypt pour les mots de passe de test : https://bcrypt-generator.com/
+- MongoDB Atlas : https://www.mongodb.com/products/platform/atlas-database
